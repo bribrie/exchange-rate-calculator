@@ -55,7 +55,7 @@ function App() {
   const [countryOptions, setCountryOptions] = useState<string[]>([]);
   const [baseCountry, setBaseCountry] = useState("KRW");
   const [resultCountry, setResultCountry] = useState("USD");
-  const [rate, setRate] = useState<number>(0); //base기준으로 result의 환율
+  const [rate, setRate] = useState(0); //base기준으로 result의 환율
   const [amount, setAmount] = useState(1);
   const [isFromAmount, setIsFromAmount] = useState(true);
 
@@ -85,13 +85,13 @@ function App() {
   }, [baseCountry, resultCountry]);
 
   //Amount Change
-  const handleFromAmountChange = (e: any) => {
-    setAmount(e.target.value);
+  const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(Number(e.target.value));
     setIsFromAmount(true);
   };
 
-  const handleToAmountChange = (e: any) => {
-    setAmount(e.target.value);
+  const handleToAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(Number(e.target.value));
     setIsFromAmount(false);
   };
 
