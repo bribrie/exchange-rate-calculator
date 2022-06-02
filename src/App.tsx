@@ -59,8 +59,6 @@ function App() {
   const [fromAmount, setFromAmount] = useState(1);
   const [toAmount, setToAmount] = useState(1);
   const [isFromAmount, setIsFromAmount] = useState(true);
-  console.log("‼️render‼️");
-  console.log("b : ", baseCountry, " R : ", resultCountry);
 
   const getExchangeRate = async (base: string, result: string) => {
     try {
