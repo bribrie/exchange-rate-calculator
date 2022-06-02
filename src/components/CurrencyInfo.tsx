@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { memo } from "react";
 
 const Wrapper = styled.div`
   flex: 1 1 auto;
@@ -44,4 +45,4 @@ const CurrencyInfo = ({ message, swapCountry }: Props) => {
   );
 };
 
-export default CurrencyInfo;
+export default memo(CurrencyInfo);
