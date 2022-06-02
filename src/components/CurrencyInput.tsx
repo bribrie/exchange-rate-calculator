@@ -27,9 +27,11 @@ interface Props {
   amount?: number | string;
   onChangeAmount: React.ChangeEventHandler<HTMLInputElement>;
   min?: number;
+  name: string;
 }
 
 const Input = ({
+  name,
   countryOptions,
   selectedCountry,
   onChangeCountry,
@@ -40,6 +42,7 @@ const Input = ({
   return (
     <Wrapper>
       <InputContainer
+        name={name}
         min={min}
         type="number"
         value={amount}

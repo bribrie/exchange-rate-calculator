@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Exchange from "./assets/ExchangeImg.png";
 import CurrencyInput from "./components/CurrencyInput";
 import CurrencyInfo from "./components/CurrencyInfo";
@@ -56,27 +56,22 @@ function App() {
   const [baseCountry, setBaseCountry] = useState("KRW");
   const [resultCountry, setResultCountry] = useState("USD");
   const [rate, setRate] = useState(0); //base기준으로 result의 환율
-  const [amount, setAmount] = useState(1);
+  const [fromAmount, setFromAmount] = useState(1);
+  const [toAmount, setToAmount] = useState(1);
   const [isFromAmount, setIsFromAmount] = useState(true);
-
-  // Calculate Rate
-  let fromAmount, toAmount;
-  if (isFromAmount) {
-    fromAmount = amount;
-    toAmount = (amount * rate).toFixed(5);
-  } else {
-    toAmount = amount;
-    fromAmount = (amount / rate).toFixed(5);
-  }
+  console.log("‼️render‼️");
+  console.log("b : ", baseCountry, " R : ", resultCountry);
 
   const getExchangeRate = async (base: string, result: string) => {
     try {
       const URL = `https://v6.exchangerate-api.com/v6/${process.env.REACT_APP_API}/latest/${base}`;
       const response = await fetch(URL).then((res) => res.json());
       setCountryOptions([...Object.keys(response.conversion_rates)]);
-      setRate(response.conversion_rates[result]);
-    } catch (error) {
-      console.log(error);
+      const rate = await response.conversion_rates[result].toFixed(5);
+      setRate(rate);
+      setToAmount(rate);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -84,24 +79,38 @@ function App() {
     getExchangeRate(baseCountry, resultCountry);
   }, [baseCountry, resultCountry]);
 
+  //Calculate
+  const calculateRate = (amount: number) => {
+    if (isFromAmount) {
+      setFromAmount(Number(Number(amount)));
+      setToAmount(Number((amount * rate).toFixed(5)));
+    } else {
+      setFromAmount(Number(amount));
+      setToAmount(Number((amount / rate).toFixed(5)));
+    }
+  };
+
   //Amount Change
   const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(e.target.value));
+    const target = parseFloat(e.target.value);
     setIsFromAmount(true);
+    calculateRate(target);
   };
 
   const handleToAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(e.target.value));
+    const target = parseFloat(e.target.value);
     setIsFromAmount(false);
+    calculateRate(target);
   };
 
   //Swap
-  const swapCountry = () => {
+  const swapCountry = useCallback(() => {
     setBaseCountry(resultCountry);
     setResultCountry(baseCountry);
-  };
+    setFromAmount(1);
+  }, [baseCountry, resultCountry]);
 
-  const MESSAGE = `1 ${baseCountry} = ${rate.toFixed(5)} ${resultCountry} `;
+  const MESSAGE = `1 ${baseCountry} = ${rate} ${resultCountry} `;
 
   return (
     <Container>
@@ -111,6 +120,7 @@ function App() {
         <Summary>Select a currency and Enter an amount.</Summary>
         <Main>
           <CurrencyInput
+            name="baseCountry"
             countryOptions={countryOptions}
             selectedCountry={baseCountry}
             onChangeCountry={(e) => setBaseCountry(e.target.value)}
@@ -120,6 +130,7 @@ function App() {
           />
           <CurrencyInfo message={MESSAGE} swapCountry={swapCountry} />
           <CurrencyInput
+            name="resultCountty"
             countryOptions={countryOptions}
             selectedCountry={resultCountry}
             onChangeCountry={(e) => setResultCountry(e.target.value)}
