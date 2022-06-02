@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/exchange-rate-calculator/static/js/main.79e0096e.js",
+    "main.js": "/exchange-rate-calculator/static/js/main.aa9de65f.js",
     "index.html": "/exchange-rate-calculator/index.html",
-    "main.79e0096e.js.map": "/exchange-rate-calculator/static/js/main.79e0096e.js.map"
+    "main.aa9de65f.js.map": "/exchange-rate-calculator/static/js/main.aa9de65f.js.map"
   },
   "entrypoints": [
-    "static/js/main.79e0096e.js"
+    "static/js/main.aa9de65f.js"
   ]
 }
